@@ -1,0 +1,4 @@
+botd.yml
+
+*.pyc
+__pycache__
