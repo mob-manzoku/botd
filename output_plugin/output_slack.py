@@ -9,6 +9,7 @@ class Output_slack(output.Output):
 
     def __init__(self, conf):
         self.type_name = "slack"
+        self.name = conf.get("name")
         self.bot_name = conf.get("bot_name", "botd")
         self.channel = conf.get("channel")
         self.hool_url = conf.get("hook_url")
@@ -24,5 +25,6 @@ class Output_slack(output.Output):
 
         req = urlrequest.Request(self.hool_url)
         opener = urlrequest.build_opener(urlrequest.HTTPHandler())
+
         with opener.open(req, data.encode('utf-8')) as res:
-            print(res)
+            self.logging(res.read().decode('utf-8'))
