@@ -9,6 +9,9 @@ def main():
     with open(args.f, "r") as f:
         conf = yaml.load(f)
 
+    # Create instances
+    instances = {}
+
     for i in conf["input"]:
         attr = "output_"
         class_name = "Output_"
@@ -23,8 +26,13 @@ def main():
         out_modules = __import__("output_plugin", fromlist=[attr])
         out_module = getattr(out_modules, attr)
         out_class = getattr(out_module, class_name)
-        o = out_class(i)
-        print(o.__dict__)
+
+        instances[i['name']] = {
+            'output': out_class(i)
+        }
+
+    for i in instances:
+        instances[i]['output'].send("aaa")
 
 
 def define_parsers():

@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
-class Output:
+from abc import ABCMeta, abstractmethod
+
+
+class Output(metaclass=ABCMeta):
 
     def __init__(self):
         pass
 
-    def output(self):
-        print(self.type_name)
+    @abstractmethod
+    def send(self, message):
+        pass
