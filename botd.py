@@ -5,6 +5,7 @@ import yaml
 
 def main():
     args = define_parsers()
+    outputs = {}
 
     with open(args.f, "r") as f:
         conf = yaml.load(f)
@@ -12,23 +13,22 @@ def main():
     # Create instances
     instances = {}
 
+    for o in conf["output"]:
+        outputs[o.get("name")] = o
+
     for i in conf["input"]:
         attr = "output_"
         class_name = "Output_"
 
-        if i.get("output") == "self":
-            attr += i.get("type")
-            class_name += i.get("type")
-        else:
-            attr += i.get("output")
-            class_name += i.get("output")
+        attr += outputs[i.get("output")].get("type")
+        class_name += outputs[i.get("output")].get("type")
 
         out_modules = __import__("output_plugin", fromlist=[attr])
         out_module = getattr(out_modules, attr)
         out_class = getattr(out_module, class_name)
 
         instances[i['name']] = {
-            'output': out_class(i)
+            'output': out_class(outputs[i.get("output")])
         }
 
     for i in instances:
